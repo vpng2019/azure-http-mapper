@@ -87,17 +87,6 @@ Key characteristics present in the supplied template include:
 - Hostname binding for `<logic-app-name>.azurewebsites.net`
 - FTP and SCM publishing credentials disabled
 
-## Important: ARM template scope
-
-The supplied ARM template provisions the Logic App Standard host and related site configuration. It does **not** include a child `Microsoft.Web/sites/workflows` resource containing the `HTTPMapper` workflow definition.
-
-Accordingly, this repository should be treated as:
-
-1. Infrastructure deployment for the Logic App Standard host, plus
-2. Separate workflow definition deployment/import.
-
-The `workflow/HTTPMapper.json` file preserves the workflow definition supplied with the source files.
-
 ## Prerequisites
 
 Before deployment, have:
