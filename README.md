@@ -41,35 +41,6 @@ Response (HTTP 200)
 HTTP Client
 ```
 
-## Workflow details
-
-### 1. HTTP trigger
-
-The workflow uses the Request trigger:
-
-`When_an_HTTP_request_is_received`
-
-It accepts the incoming HTTP request and exposes its body to subsequent actions.
-
-### 2. XSLT transformation
-
-The `Transform_XML` action uses the Azure Logic Apps `Xslt` action.
-
-- Input content: `@triggerBody()`
-- Map source: `LogicApp`
-- Map name: `Map.xslt`
-
-The action is executed without a prior dependency (`runAfter: {}`).
-
-### 3. HTTP response
-
-The `Response` action runs only after `Transform_XML` succeeds.
-
-- Status code: `200`
-- Response body: `@body('Transform_XML')`
-
-Therefore, the transformed XML produced by the XSLT action is returned directly to the caller.
-
 ## Infrastructure template
 
 `deployment/template.json` provisions an Azure Logic App Standard host using the `Microsoft.Web/sites` resource type.
