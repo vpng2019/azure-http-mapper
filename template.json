@@ -1,0 +1,217 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverfarms_ASP_RGAPIM_aea9_externalid": {
+            "defaultValue": "/subscriptions/227d8187-8567-478d-9ada-404a9f6bd40d/resourceGroups/RG_APIM/providers/Microsoft.Web/serverfarms/ASP-RGAPIM-aea9",
+            "type": "String",
+            "metadata": {
+                "description": "Full resource ID of the App Service Plan used by the Logic App Standard resource."
+            }
+        },
+        "sites_logicapp_azure_http_mapper_name": {
+            "defaultValue": "logicapp-azure-http-mapper",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the Azure Logic App Standard resource. Must be globally unique within Azure."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2024-11-01",
+            "name": "[parameters('sites_logicapp_azure_http_mapper_name')]",
+            "location": "East Asia",
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "/subscriptions/227d8187-8567-478d-9ada-404a9f6bd40d/resourceGroups/RG_APIM/providers/Microsoft.Insights/components/logicapp-azure-http-mapper"
+            },
+            "kind": "functionapp,workflowapp",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_logicapp_azure_http_mapper_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_logicapp_azure_http_mapper_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[parameters('serverfarms_ASP_RGAPIM_aea9_externalid')]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "dnsConfiguration": {},
+                "outboundVnetRouting": {
+                    "allTraffic": false,
+                    "applicationTraffic": false,
+                    "contentShareTraffic": false,
+                    "imagePullTraffic": false,
+                    "backupRestoreTraffic": false
+                },
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 1
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientAffinityProxyEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "ipMode": "IPv4",
+                "customDomainVerificationId": "E3C476B903FF2C53281473F54EA5FE4CE5441C05974C142C3DEF42069823A7E4",
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "endToEndEncryptionEnabled": false,
+                "redundancyMode": "None",
+                "publicNetworkAccess": "Enabled",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('sites_logicapp_azure_http_mapper_name'), '/ftp')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_logicapp_azure_http_mapper_name'))]"
+            ],
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "/subscriptions/227d8187-8567-478d-9ada-404a9f6bd40d/resourceGroups/RG_APIM/providers/Microsoft.Insights/components/logicapp-azure-http-mapper"
+            },
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('sites_logicapp_azure_http_mapper_name'), '/scm')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_logicapp_azure_http_mapper_name'))]"
+            ],
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "/subscriptions/227d8187-8567-478d-9ada-404a9f6bd40d/resourceGroups/RG_APIM/providers/Microsoft.Insights/components/logicapp-azure-http-mapper"
+            },
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('sites_logicapp_azure_http_mapper_name'), '/web')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_logicapp_azure_http_mapper_name'))]"
+            ],
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "/subscriptions/227d8187-8567-478d-9ada-404a9f6bd40d/resourceGroups/RG_APIM/providers/Microsoft.Insights/components/logicapp-azure-http-mapper"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php"
+                ],
+                "netFrameworkVersion": "v8.0",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "REDACTED",
+                "scmType": "None",
+                "use32BitWorkerProcess": false,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "publicNetworkAccess": "Enabled",
+                "cors": {
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "managedServiceIdentityId": 30010,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 1,
+                "functionAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": true,
+                "minimumElasticInstanceCount": 1,
+                "azureStorageAccounts": {},
+                "http20ProxyFlag": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2024-11-01",
+            "name": "[concat(parameters('sites_logicapp_azure_http_mapper_name'), '/', parameters('sites_logicapp_azure_http_mapper_name'), '.azurewebsites.net')]",
+            "location": "East Asia",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_logicapp_azure_http_mapper_name'))]"
+            ],
+            "properties": {
+                "siteName": "logicapp-azure-http-mapper",
+                "hostNameType": "Verified"
+            }
+        }
+    ]
+}
